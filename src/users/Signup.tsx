@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
-
+import './Signup.css';
 const SIGN_UP = gql`
   mutation SignUp($name: String!, $email: String!, $password: String!, $role: String!) {
     signUp(name: $name, email: $email, password: $password, role: $role) {
@@ -31,15 +31,26 @@ const Signup: React.FC = () => {
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [signUp, { loading, error: mutationError }] = useMutation(SIGN_UP);
   const navigate = useNavigate();
+  const emailRegex =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+\.)+[a-zA-Z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]{2,}))$/;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const newErrors = { ...errors };
+
+    if (name === 'email') {
+      newErrors.email = emailRegex.test(value) ? '' : 'Incorrect email format';
+    }
+
+    setErrors(newErrors);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const emailRegex =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+\.)+[a-zA-Z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]{2,}))$/;
     const newErrors = { email: '', password: '' };
 
     if (!emailRegex.test(formData.email)) {
@@ -68,49 +79,54 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Name:</label>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-      </div>
-      <div>
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          style={{ borderColor: errors.email ? 'red' : '' }}
-        />
-        {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
-      </div>
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          style={{ borderColor: errors.password ? 'red' : '' }}
-        />
-      </div>
-      <div>
-        <label>Confirm Password:</label>
-        <input
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-          style={{ borderColor: errors.password ? 'red' : '' }}
-        />
-        {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
-      </div>
-      <button type="submit" disabled={loading}>Sign Up</button>
-      {mutationError && <p style={{ color: 'red' }}>{mutationError.message}</p>}
-    </form>
+    <div className="form-container">
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Name:</label>
+          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+        </div>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            required
+            style={{ borderColor: errors.email ? 'red' : '' }}
+          />
+          {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            required
+            style={{ borderColor: errors.password ? 'red' : '' }}
+          />
+        </div>
+        <div>
+          <label>Confirm Password:</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            required
+            style={{ borderColor: errors.password ? 'red' : '' }}
+          />
+          {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
+        </div>
+        <button type="submit" disabled={loading}>Sign Up</button>
+        {mutationError && <p style={{ color: 'red' }}>{mutationError.message}</p>}
+      </form>
+    </div>
   );
 };
 
