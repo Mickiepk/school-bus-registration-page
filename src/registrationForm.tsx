@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
+
 interface StudentFormData {
   studentId: string;
   firstName: string;
   lastName: string;
   school: string;
-  age: number | '';
+  age: number | null;
   address: string;
   homeLocation: string;
   guardianName: string;
@@ -18,7 +19,7 @@ const RegistrationForm: React.FC = () => {
     firstName: '',
     lastName: '',
     school: '',
-    age: '',
+    age: null,
     address: '',
     homeLocation: '',
     guardianName: '',
@@ -27,7 +28,16 @@ const RegistrationForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: name === 'age' ? parseInt(value) || '' : value });
+    if (name === 'age') {
+      const intValue = parseInt(value);
+      if (!isNaN(intValue)) {
+        setFormData({ ...formData, [name]: intValue });
+      } else {
+        setFormData({ ...formData, [name]: null });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
