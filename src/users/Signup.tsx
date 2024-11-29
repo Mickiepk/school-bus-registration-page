@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
+import { UserAccount } from '../models/RegistrationForm.ts';
 const SIGN_UP = gql`
   mutation SignUp($name: String!, $email: String!, $password: String!, $role: String!) {
     signUp(name: $name, email: $email, password: $password, role: $role) {
@@ -13,11 +14,6 @@ const SIGN_UP = gql`
   }
 `;
 
-export interface UserAccount {
-  username: string;
-  password: string;
-  email: string;
-}
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
