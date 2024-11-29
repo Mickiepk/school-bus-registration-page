@@ -9,3 +9,14 @@ export interface StudentFormData {
     guardianName: string;
     phoneNumber: string;
   }
+
+export interface GetUserInfo { 
+    userid : number;
+    accountinfo : UserAccount;
+}
+
+export interface UserAccount {
+    username: string;
+    password: string;
+    email: string;
+}
