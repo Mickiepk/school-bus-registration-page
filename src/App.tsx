@@ -1,13 +1,28 @@
 import React from 'react';
-import RegistrationForm from './registrationForm';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import HomePage from '/Users/mickiepk/Desktop/project/my-react-app/src/Homepage.tsx';
+import Signup from './users/Signup';
+
+// Create an Apollo Client instance
+const client = new ApolloClient({
+  uri: 'https://your-graphql-endpoint.com/graphql', // Replace with your GraphQL endpoint
+  cache: new InMemoryCache(),
+});
 
 const App: React.FC = () => {
-//hello 
   return (
-    <div className="container mt-5">
-      <h1 className="text-center">Student Registration Form</h1>
-      <RegistrationForm />
-    </div>
+    <ApolloProvider client={client}>
+      <Router>
+        <div className="container mt-5">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<div>Login Page</div>} /> {/* Placeholder for Login Page */}
+            <Route path="/register" element={<Signup />} />
+          </Routes>
+        </div>
+      </Router>
+    </ApolloProvider>
   );
 };
 
