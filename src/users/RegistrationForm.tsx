@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-
-
-interface StudentFormData {
-  studentId: string;
-  firstName: string;
-  lastName: string;
-  school: string;
-  age: number | null;
-  address: string;
-  homeLocation: string;
-  guardianName: string;
-  phoneNumber: string;
-}
+import { StudentFormData } from '../models/RegistrationForm';
 
 const RegistrationForm: React.FC = () => {
   const [formData, setFormData] = useState<StudentFormData>({
@@ -106,7 +94,7 @@ const RegistrationForm: React.FC = () => {
           id="age"
           name="age"
           className="form-control"
-          value={formData.age}
+          value={formData.age !== null ? formData.age : ''}
           onChange={handleChange}
           required
         />
