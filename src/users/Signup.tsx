@@ -1,19 +1,7 @@
 import React, { useState } from 'react';
-import { gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+import { signUpUser } from '../Services/Signup'; // Import the API function
 import './Signup.css';
-import { UserAccount } from '../models/RegistrationForm.ts';
-const SIGN_UP = gql`
-  mutation SignUp($name: String!, $email: String!, $password: String!, $role: String!) {
-    signUp(name: $name, email: $email, password: $password, role: $role) {
-      id
-      name
-      email
-      role
-    }
-  }
-`;
-
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -21,11 +9,9 @@ const Signup: React.FC = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'user', // Default role
   });
 
   const [errors, setErrors] = useState({ email: '', password: '' });
-  const [signUp, { loading, error: mutationError }] = useMutation(SIGN_UP);
   const navigate = useNavigate();
   const emailRegex =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+\.)+[a-zA-Z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]{2,}))$/;
 
@@ -59,17 +45,23 @@ const Signup: React.FC = () => {
     setErrors(newErrors);
 
     if (!newErrors.email && !newErrors.password) {
-      const userAccount: UserAccount = {
-        username: formData.name,
-        password: formData.password,
-        email: formData.email,
-      };
-
       try {
-        await signUp({ variables: { ...userAccount, role: formData.role } });
+        // Call the API function
+        const userAccount = {
+          "UserAccount": {
+          username: formData.name,
+          email: formData.email,
+          password: formData.password,
+          }
+        };
+
+        const response = await signUpUser(userAccount);
+
+        console.log('User signed up successfully:', response);
         navigate('/dashboard');
-      } catch (err) {
-        console.error(err);
+      } catch (err: any) {
+        console.error('Signup error:', err);
+        alert(err.error || 'An error occurred during sign up.');
       }
     }
   };
@@ -101,9 +93,7 @@ const Signup: React.FC = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            onBlur={handleBlur}
             required
-            style={{ borderColor: errors.password ? 'red' : '' }}
           />
         </div>
         <div>
@@ -113,14 +103,11 @@ const Signup: React.FC = () => {
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
-            onBlur={handleBlur}
             required
-            style={{ borderColor: errors.password ? 'red' : '' }}
           />
           {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
         </div>
-        <button type="submit" disabled={loading}>Sign Up</button>
-        {mutationError && <p style={{ color: 'red' }}>{mutationError.message}</p>}
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   );

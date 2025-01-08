@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import HomePage from '/Users/mickiepk/Desktop/project/my-react-app/src/Homepage.tsx';
+import HomePage from './Homepage.tsx';
 import Signup from './users/Signup';
 import Login from './users/Login';
 
-// Create an Apollo Client instance
+// Create an Apollo Client instances
 const client = new ApolloClient({
   uri: 'https://your-graphql-endpoint.com/graphql', // Replace with your GraphQL endpoint
   cache: new InMemoryCache(),
