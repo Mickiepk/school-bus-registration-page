@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { UserAccount } from '../models/RegistrationForm.ts';
+//import axios from 'axios';
+//import { UserAccount } from '../models/RegistrationForm.ts';
 import './Signup.css'; // Optional if you have styles for login
 import { logInUser } from '../Services/Signup.tsx';
 
@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   const [errors, setErrors] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [mutationError, setMutationError] = useState('');
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   
   //const emailRegex =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+\.)+[a-zA-Z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]{2,}))$/;
 
@@ -52,7 +52,7 @@ const Login: React.FC = () => {
         }
       };
 
-      const response = await logInUser(userAccount);
+      //const response = await logInUser(userAccount);
 
 
       // Assuming the response contains a token
